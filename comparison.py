@@ -21,7 +21,7 @@ class Comparison:
         for dictionary in self.data:
             for key in dictionary.keys():
                 subquestions.append(Subquestion(self.role1, self.role2, self.question, i, key, dictionary[key]))
-                i += 1
+            i += 1
         return subquestions
 
     def toString(self, comparison, csv=False):

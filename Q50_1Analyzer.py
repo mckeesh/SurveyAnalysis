@@ -76,7 +76,6 @@ class Q50_1Analyzer:
     def getResponseCounts(self, participants):
         roles = None
         if self.roles is not None:
-            print("Filtering Participants")
             participants = [p for p in participants if p.roles.sharesRoleWith(self.roles)]
 
         scoreSums = [self._blankAnswerDict(participants[0].q50_1) for x in range(len(participants[0].q50_1.listed))]

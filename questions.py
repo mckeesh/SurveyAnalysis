@@ -60,6 +60,10 @@ class Q36:
         return Q36.answersFullNames[answerNumber-13]
 
 class Q19:
+    name = "Q19"
+    answers = [22, 23, 24, 25, 26]
+    answersFullNames = ["Not effective at all", "Slightly effective", "Moderately effective", \
+                                 "Very effective", "Extremely effective"]
     def __init__(self, answers):
         self.simpleSmall, \
         self.simpleLarge, \
@@ -67,15 +71,31 @@ class Q19:
         self.complexLarge, \
         self.explorationReqd, \
         self.littleNoExploration = answers
+        self.listed = answers
+
+    @staticmethod
+    def getAnswerTitle(answerNumber):
+        return Q19.answersFullNames[answerNumber-22]
 
 class Q26:
     def __init__(self, answer):
         self.answer = answer
 
 class Q34:
+    name = "Q34"
+    answers = [1]
+    answersFullNames = ["Checked"]
     def __init__(self, answers):
         self.deadlines, \
         self.teamAwareness, \
         self.projectSizeScale, \
         self.projectStructureIssues, \
         self.projectRules = answers
+        self.listed = answers
+
+    @staticmethod
+    def getAnswerTitle(answerNumber):
+        if answerNumber == 1:
+            return "Checked"
+        else:
+            return "Not Checked"

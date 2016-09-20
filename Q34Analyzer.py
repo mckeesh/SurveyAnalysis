@@ -2,9 +2,10 @@ import os
 
 from roles import Roles
 from comparison import Comparison
-from questions import Q36
+from questions import Q34
 
-class Q36Analyzer:
+#doesn't split yes and maybe
+class Q34Analyzer:
     
     def __init__(self, roles=None):
         self.roles = roles
@@ -65,7 +66,7 @@ class Q36Analyzer:
             rankingsFile.write("Role 2, %s\n" % subquestion.role2.getActiveRoles()[0])
             rankingsFile.write("Question, %s\n" % subquestion.questionNumber)
             rankingsFile.write("Subquestion, %d\n" % subquestion.subquestionNumber)
-            rankingsFile.write("Answer, %s\n" % Q36.getAnswerTitle(subquestion.answer))
+            rankingsFile.write("Answer, %s\n" % Q34.getAnswerTitle(subquestion.answer))
             rankingsFile.write("Percent Difference, %f\n" % subquestion.value)
             rankingsFile.write("")
             i += 1
@@ -78,14 +79,14 @@ class Q36Analyzer:
         if self.roles is not None:
             participants = [p for p in participants if p.roles.sharesRoleWith(self.roles)]
 
-        scoreSums = [self._blankAnswerDict(participants[0].q36) for x in range(len(participants[0].q36.listed))]
+        scoreSums = [self._blankAnswerDict(participants[0].q34) for x in range(len(participants[0].q34.listed))]
         for participant in participants:
-            q36 = participant.q36.listed
+            q34 = participant.q34.listed
 
-            for i in range(len(q36)):
-                currentValue = q36[i]
+            for i in range(len(q34)):
+                currentValue = q34[i]
                 if currentValue is not None:
-                    scoreSums[i][q36[i]] += 1
+                    scoreSums[i][q34[i]] += 1
 
         return scoreSums
 
@@ -123,7 +124,7 @@ class Q36Analyzer:
 
         comparison = self.compareResults(roles1Result, roles2Result)
 
-        return Comparison(roles1, roles2, "Q36", comparison)
+        return Comparison(roles1, roles2, "Q34", comparison)
 
     def compareResults(self, result1, result2):
         if len(result1) != len(result2):
@@ -173,14 +174,14 @@ class Q36Analyzer:
 
     def createDirs(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        resultsDirectory = dir_path + "/results/Q36/" 
+        resultsDirectory = dir_path + "/results/Q34/" 
     
         if not os.path.exists(resultsDirectory):
             os.makedirs(resultsDirectory)
 
     def createResultsFile(self, fileName):
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        resultsFile = dir_path + "/results/Q36/" + fileName
+        resultsFile = dir_path + "/results/Q34/" + fileName
 
         f = open(resultsFile, "w")
 

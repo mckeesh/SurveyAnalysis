@@ -4,8 +4,11 @@ import os
 from roles import Roles
 from participant import Participant
 from questions import *
+# from Q34Analyzer import Q34Analyzer
+from Q19Analyzer import Q19Analyzer
 from Q36Analyzer import Q36Analyzer
 from Q50_1Analyzer import Q50_1Analyzer
+from Q50_2Analyzer import Q50_2Analyzer
 
 def main():
     dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -31,8 +34,17 @@ def main():
 
             index += 1
 
+        analyzeQ19(participantList)
         analyzeQ36(participantList)
         analyzeQ50_1(participantList)
+        analyzeQ50_2(participantList)
+        # analyzeQ34(participantList)
+
+
+def analyzeQ19(participants):
+
+    analyzer = Q19Analyzer()
+    analyzer.analyze(participants)
 
 def analyzeQ36(participants):
 
@@ -42,6 +54,16 @@ def analyzeQ36(participants):
 def analyzeQ50_1(participants):
 
     analyzer = Q50_1Analyzer()
+    analyzer.analyze(participants)
+
+def analyzeQ50_2(participants):
+
+    analyzer = Q50_2Analyzer()
+    analyzer.analyze(participants)
+
+def analyzeQ34(participants):
+
+    analyzer = Q34Analyzer()
     analyzer.analyze(participants)
 
 def createParticipant(row):
