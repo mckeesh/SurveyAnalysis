@@ -17,10 +17,11 @@ class Comparison:
             raise Exception("Data must be set to split into subquestions.")
         
         subquestions = []
+        i = 0
         for dictionary in self.data:
             for key in dictionary.keys():
-                subquestions.append(Subquestion(self.role1, self.role2, self.question, key, dictionary[key]))
-
+                subquestions.append(Subquestion(self.role1, self.role2, self.question, i, key, dictionary[key]))
+                i += 1
         return subquestions
 
     def toString(self, comparison, csv=False):

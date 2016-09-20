@@ -1,4 +1,8 @@
 class Q50_1:
+    name = "Q50_1"
+    answers = [36, 37, 38, 39, 40]
+    answersFullNames = ["Not at all", "A little", "A moderate amount", \
+                                 "A lot", "A great deal"]
     def __init__(self, answers):
         self.timeToResolve, \
         self.conflictingLOC, \
@@ -9,8 +13,17 @@ class Q50_1:
         self.dependencies, \
         self.atomicity, \
         self.knowledgeExpertise = answers
+        self.listed = answers
+
+    @staticmethod
+    def getAnswerTitle(answerNumber):
+        return Q50_1.answersFullNames[answerNumber-36]
 
 class Q50_2:
+    name = "Q50_2"
+    answers = [1, 2, 3, 4, 5]
+    answersFullNames = ["Not useful", "Slightly useful", "Moderately useful", \
+                                 "Very useful", "Essential"]
     def __init__(self, answers):
         self.betterToolTransparency, \
         self.betterUsability, \
@@ -18,8 +31,17 @@ class Q50_2:
         self.betterGraphicalInfo, \
         self.betterExploration, \
         self.betterTerminology = answers
+        self.listed = answers
+
+    @staticmethod
+    def getAnswerTitle(answerNumber):
+        return Q50_2.answersFullNames[answerNumber-1]
 
 class Q36:
+    name = "Q36"
+    answers = [13, 14, 15, 16, 17]
+    answersFullNames = ["Not at all", "A little", "A moderate amount", \
+                                 "A lot", "A great deal"]
     def __init__(self, answers):
         self.amountOfInfo, \
         self.understandability, \
@@ -32,10 +54,10 @@ class Q36:
         self.projectCulture, \
         self.expertiseInArea = answers
         self.listed = answers
-        self.name = "Q36"
-        self.answers = [13, 14, 15, 16, 17]
-        self.answersFullNames = ["Not at all", "A little", "A moderate amount", \
-                                 "A lot", "A great deal"]
+
+    @staticmethod
+    def getAnswerTitle(answerNumber):
+        return Q36.answersFullNames[answerNumber-13]
 
 class Q19:
     def __init__(self, answers):

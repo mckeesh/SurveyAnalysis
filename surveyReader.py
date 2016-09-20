@@ -5,10 +5,11 @@ from roles import Roles
 from participant import Participant
 from questions import *
 from Q36Analyzer import Q36Analyzer
+from Q50_1Analyzer import Q50_1Analyzer
 
 def main():
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    resultsDirectory = dir_path + "results/"
+    resultsDirectory = dir_path + "/results/"
 
     if not os.path.exists(resultsDirectory):
         os.makedirs(resultsDirectory)
@@ -31,12 +32,16 @@ def main():
             index += 1
 
         analyzeQ36(participantList)
+        analyzeQ50_1(participantList)
 
 def analyzeQ36(participants):
-    # rolesForFilter = Roles()
-    # rolesForFilter.isSysEng = True
 
     analyzer = Q36Analyzer()
+    analyzer.analyze(participants)
+
+def analyzeQ50_1(participants):
+
+    analyzer = Q50_1Analyzer()
     analyzer.analyze(participants)
 
 def createParticipant(row):
