@@ -1,6 +1,18 @@
 import csv
+import os 
+
+from roles import Roles
+from participant import Participant
+from questions import *
+from Q36Analyzer import Q36Analyzer
 
 def main():
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    resultsDirectory = dir_path + "results/"
+
+    if not os.path.exists(resultsDirectory):
+        os.makedirs(resultsDirectory)
+
     participantList = []
 
     with open('survey.csv', newline='') as csvfile:
@@ -12,77 +24,43 @@ def main():
             if index < 2:
                 pass
             else:
-                participant = Participant()
-
-                roles = getRoles(row)
-                participant.setRoles(roles)
-
-                q50_1 = getQ50_1(row)
-                participant.setQ50_1(q50_1)
-
-                q50_2 = getQ50_2(row)
-                participant.setQ50_2(q50_2)
-
-                q36 = getQ36(row)
-                participant.setQ36(q36)
-
-                q19 = getQ19(row)
-                participant.setQ19(q19)
-
-                q34 = getQ34(row)
-                participant.setQ34(q34)
-
+                
+                participant = createParticipant(row)
                 participantList.append(participant)
 
             index += 1
 
-class Participant:
-    def __init__(self):
-        self.roles = None
-        self.q19 = None
-        self.q50_1 = None
-        self.q50_2 = None
-        self.q34 = None
-        self.q36 = None
+        analyzeQ36(participantList)
 
-    def setRoles(self, rolesObj):
-        self.roles = rolesObj
+def analyzeQ36(participants):
+    # rolesForFilter = Roles()
+    # rolesForFilter.isSysEng = True
 
-    def setQ19(self, q19Response):
-        self.q19 = q19Response
+    analyzer = Q36Analyzer()
+    analyzer.analyze(participants)
 
-    def setQ50_1(self, response):
-        self.q50_1 = response
+def createParticipant(row):
+    participant = Participant()
 
-    def setQ50_2(self, response):
-        self.q50_2 = response
+    roles = getRoles(row)
+    participant.setRoles(roles)
 
-    def setQ34(self, response):
-        self.q34 = response
+    q50_1 = getQ50_1(row)
+    participant.setQ50_1(q50_1)
 
-    def setQ36(self, response):
-        self.q36 = response
+    q50_2 = getQ50_2(row)
+    participant.setQ50_2(q50_2)
 
-class Roles:
-    def __eq__(self, other):
-        return other.isSoftEng == self.isSoftEng and \
-               other.isSysEng == self.isSysEng and \
-               other.isSysAdmin == self.isSysAdmin and \
-               other.isProjMaint == self.isProjMaint and \
-               other.isProjManag == self.isProjManag and \
-               other.isOtherRole == self.isOtherRole and \
-               other.isSysArch == self.isSysArch and \
-               other.isDevOps == self.isDevOps
+    q36 = getQ36(row)
+    participant.setQ36(q36)
 
-    def __init__(self, roleList):
-        self.isSoftEng, \
-        self.isSysEng, \
-        self.isSysAdmin, \
-        self.isProjMaint, \
-        self.isProjManag, \
-        self.isOtherRole, \
-        self.isSysArch, \
-        self.isDevOps = roleList
+    q19 = getQ19(row)
+    participant.setQ19(q19)
+
+    q34 = getQ34(row)
+    participant.setQ34(q34)
+
+    return participant
 
 def getRoles(row):
     isSoftEng = convertStrToBoolean(row[16])
@@ -95,57 +73,6 @@ def getRoles(row):
     isDevOps = convertStrToBoolean(row[24])
 
     return Roles([isSoftEng, isSysEng, isSysAdmin, isProjMaint, isProjManag, isOtherRole, isSysArch, isDevOps])
-
-class Q50_1:
-    def __init__(self, answers):
-        self.timeToResolve, \
-        self.conflictingLOC, \
-        self.complexityOfLOC, \
-        self.numberOfFiles, \
-        self.complexityOfFile, \
-        self.nonFunctionalChanges, \
-        self.dependencies, \
-        self.atomicity, \
-        self.knowledgeExpertise = answers
-
-class Q50_2:
-    def __init__(self, answers):
-        self.betterToolTransparency, \
-        self.betterUsability, \
-        self.betterFiltering, \
-        self.betterGraphicalInfo, \
-        self.betterExploration, \
-        self.betterTerminology = answers
-
-class Q36:
-    def __init__(self, answers):
-        self.amountOfInfo, \
-        self.understandability, \
-        self.toolSupport, \
-        self.projectStructComplexity, \
-        self.toolInfoPresentation, \
-        self.toolTrustworthiness, \
-        self.commitMessage, \
-        self.outdatedAssumptions, \
-        self.projectCulture, \
-        self.expertiseInArea = answers
-
-class Q19:
-    def __init__(self, answers):
-        self.simpleSmall, \
-        self.simpleLarge, \
-        self.complexSmall, \
-        self.complexLarge, \
-        self.explorationReqd, \
-        self.littleNoExploration = answers
-
-class Q34:
-    def __init__(self, answers):
-        self.deadlines, \
-        self.teamAwareness, \
-        self.projectSizeScale, \
-        self.projectStructureIssues, \
-        self.projectRules = answers
 
 def getQ50_1(row):
     answerList = []
@@ -172,7 +99,6 @@ def getQ36(row):
     return Q36(answerList)
 
 def getQ19(row):
-    print(row)
     answerList = []
 
     for each in range(72,78):
@@ -180,8 +106,10 @@ def getQ19(row):
 
     return Q19(answerList)
 
+def getQ26(row):
+    return Q26(row[48])
+
 def getQ34(row):
-    print(row)
     answerList = []
 
     for each in range(49,54):
@@ -211,9 +139,6 @@ def convertStrToBoolean(string):
         return bool(string)
     except Exception as e:
         raise e
-
-
-
 
 
 main()
