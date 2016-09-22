@@ -13,12 +13,28 @@ class Q36Analyzer:
     def setRoles(self, roles):
         self.roles = roles
 
-    def analyze(self, participants, ignoreOtherRole=True):
-        self.createDirs()
+    def analyze(self, participants):
+        self.createDirs("/results/Q36/")
 
         responseCounts = self.getResponseCounts(participants)
         responsePercentages = self.getResponsePercentages(participants)
+
+        self.analyzeGeneralResults(participants)
         
+        comparisons = self.analyzeRoleDifferences(participants)
+        subquestions = self.rankComparisons(comparisons)
+        self.outputRankings(subquestions)
+
+    def analyzeGeneralResults(self, participants):
+        tempRoles = self.roles
+        self.roles = None
+
+        percentages = self.getResponsePercentages(participants)
+        self.outputPercentages(percentages)
+
+        self.roles = tempRoles
+
+    def analyzeRoleDifferences(self, participants, ignoreOtherRole=True):
         #Eew, clean it up
         comparisons = []
         if ignoreOtherRole:
@@ -55,23 +71,35 @@ class Q36Analyzer:
                     comparison = self.compareRoles(roles1, roles2, participants)
                     comparisons.append(comparison)
 
-        subquestions = self.rankComparisons(comparisons)
+        return comparisons
+        
+    def outputPercentages(self, percentageResults):
+        self.createDirs("/results/Q36/general/")
 
+        resultsFile = self.createResultsFile("general/percentage_results.csv")
+        for i in range(len(percentageResults)):
+            resultsFile.write("Question,%s\n" % Q36.subquestions[i])
+            subquestionResultDict = percentageResults[i]
+            sortedKeys = sorted(subquestionResultDict.keys(), reverse=True)
+
+            for key in sortedKeys:
+                keyText = Q36.getAnswerTitle(key)
+                resultsFile.write("%s,%s\n" % (keyText, subquestionResultDict[key]))
+            resultsFile.write("\n")
+
+    def outputRankings(self, subquestions):
         rankingsFile = self.createResultsFile("rankings.csv")
 
-        i = 0
         for subquestion in subquestions:
             rankingsFile.write("Role 1, %s\n" % subquestion.role1.getActiveRoles()[0])
             rankingsFile.write("Role 2, %s\n" % subquestion.role2.getActiveRoles()[0])
             rankingsFile.write("Question, %s\n" % subquestion.questionNumber)
-            rankingsFile.write("Subquestion, %d\n" % subquestion.subquestionNumber)
+            rankingsFile.write("Subquestion, %s\n" % Q36.subquestions[subquestion.subquestionNumber])
             rankingsFile.write("Answer, %s\n" % Q36.getAnswerTitle(subquestion.answer))
             rankingsFile.write("Percent Difference, %f\n" % subquestion.value)
-            rankingsFile.write("")
-            i += 1
+            rankingsFile.write("\n")
 
         rankingsFile.close()
-
 
     def getResponseCounts(self, participants):
         roles = None
@@ -171,9 +199,9 @@ class Q36Analyzer:
 
         return answerDict
 
-    def createDirs(self):
+    def createDirs(self, dirPath):
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        resultsDirectory = dir_path + "/results/Q36/" 
+        resultsDirectory = dir_path + dirPath
     
         if not os.path.exists(resultsDirectory):
             os.makedirs(resultsDirectory)
