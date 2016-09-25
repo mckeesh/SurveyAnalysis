@@ -24,8 +24,8 @@ class Roles:
         titles = self.getRoleTitles()
         return [titles[i] for i in range(len(titles)) if self.listed[i]]
 
-
-    def getRoleTitles(self):
+    @staticmethod
+    def getRoleTitles():
         return ["Software Engineer", "Systems Engineer", "System Administrator", \
                 "Project Maintainer", "Project Manager", "Other", "System Architect", \
                 "DevOps"]

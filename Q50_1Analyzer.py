@@ -34,7 +34,7 @@ class Q50_1Analyzer:
                     if i == 5 or j == 5:
                         pass
                     else:
-                        roleTitles = roles1.getRoleTitles()
+
                         roles2 = Roles(jRoles)
 
                         comparison = self.compareRoles(roles1, roles2, participants)
@@ -49,7 +49,6 @@ class Q50_1Analyzer:
                     jRoles = [False]*8
                     jRoles[j] = True
 
-                    roleTitles = roles1.getRoleTitles()
                     roles2 = Roles(jRoles)
 
                     comparison = self.compareRoles(roles1, roles2, participants)

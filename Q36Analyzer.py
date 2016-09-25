@@ -16,10 +16,11 @@ class Q36Analyzer:
     def analyze(self, participants):
         self.createDirs("/results/Q36/")
 
-        responseCounts = self.getResponseCounts(participants)
-        responsePercentages = self.getResponsePercentages(participants)
+        # responseCounts = self.getResponseCounts(participants)
+        # responsePercentages = self.getResponsePercentages(participants)
 
         self.analyzeGeneralResults(participants)
+        self.analyzeEachRole(participants)
         
         comparisons = self.analyzeRoleDifferences(participants)
         subquestions = self.rankComparisons(comparisons)
@@ -30,7 +31,45 @@ class Q36Analyzer:
         self.roles = None
 
         percentages = self.getResponsePercentages(participants)
-        self.outputPercentages(percentages)
+
+        i = 0
+        for d in percentages:
+            print(Q36.subquestions[i])
+            for key in d.keys():
+                print("%s,%f" % (Q36.getAnswerTitle(key), d[key]))
+            print("")
+            i += 1
+
+        self.outputPercentages(percentages, "percentage_results.csv")
+
+        self.roles = tempRoles
+
+    def analyzeEachRole(self, participants, ignoreOtherRole=False):
+        tempRoles = self.roles
+
+        if ignoreOtherRole:
+            for i in range(8):
+                roles = [False]*8
+                roles[i] = True
+                roles1 = Roles(roles)
+                self.roles = roles1
+
+                if i == 5 or j == 5:
+                    pass
+                else:
+                    percentages = self.getResponsePercentages(participants)
+                    self.outputPercentages(percentages, "percentage_results_%s.csv" % Roles.getRoleTitles()[i])
+
+                    
+        else:
+            for i in range(8):
+                roles = [False]*8
+                roles[i] = True
+                roles1 = Roles(roles)
+                self.roles = roles1
+
+                percentages = self.getResponsePercentages(participants)
+                self.outputPercentages(percentages, "percentage_results_%s.csv" % Roles.getRoleTitles()[i])
 
         self.roles = tempRoles
 
@@ -50,7 +89,7 @@ class Q36Analyzer:
                     if i == 5 or j == 5:
                         pass
                     else:
-                        roleTitles = roles1.getRoleTitles()
+
                         roles2 = Roles(jRoles)
 
                         comparison = self.compareRoles(roles1, roles2, participants)
@@ -65,7 +104,6 @@ class Q36Analyzer:
                     jRoles = [False]*8
                     jRoles[j] = True
 
-                    roleTitles = roles1.getRoleTitles()
                     roles2 = Roles(jRoles)
 
                     comparison = self.compareRoles(roles1, roles2, participants)
@@ -73,19 +111,19 @@ class Q36Analyzer:
 
         return comparisons
         
-    def outputPercentages(self, percentageResults):
-        self.createDirs("/results/Q36/general/")
+    def outputPercentages(self, percentageResults, fileName):
+        self.createDirs("/results/Q36/general/percentages")
 
-        resultsFile = self.createResultsFile("general/percentage_results.csv")
+        resultsFile = self.createResultsFile("general/percentages/%s" % fileName)
+        resultsFile.write(",%s\n" % ",".join(reversed(Q36.answersFullNames)))
         for i in range(len(percentageResults)):
-            resultsFile.write("Question,%s\n" % Q36.subquestions[i])
             subquestionResultDict = percentageResults[i]
             sortedKeys = sorted(subquestionResultDict.keys(), reverse=True)
 
-            for key in sortedKeys:
-                keyText = Q36.getAnswerTitle(key)
-                resultsFile.write("%s,%s\n" % (keyText, subquestionResultDict[key]))
-            resultsFile.write("\n")
+            rowToWriteList = [str(subquestionResultDict[key]) for key in sortedKeys]
+
+            keyText = Q36.subquestions[i]
+            resultsFile.write("%s,%s\n" % (keyText, ",".join(rowToWriteList)))
 
     def outputRankings(self, subquestions):
         rankingsFile = self.createResultsFile("rankings.csv")

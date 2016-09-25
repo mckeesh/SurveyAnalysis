@@ -43,15 +43,15 @@ class Q36:
     answersFullNames = ["Not at all", "A little", "A moderate amount", \
                                  "A lot", "A great deal"]
     subquestions = ["The amount of information you have about the conflicting code", \
-                    "Your expertise in the area of code with the merge conflict", \
                     "How easy it is to understand the code involved in the merge conflict", \
-                    "How well tools present information in an understandable way", \
-                    "Trustworthiness of tools", \
                     "Tool support for examining development history", \
                     "Complexity of the project structure", \
+                    "How well tools present information in an understandable way", \
+                    "Trustworthiness of tools", \
                     "Informativiness of commit messages", \
                     "Changing assumptions within the code", \
-                    "Project culture"]
+                    "Project culture", \
+                    "Your expertise in the area of code with the merge conflict"]
     def __init__(self, answers):
         self.amountOfInfo, \
         self.understandability, \
