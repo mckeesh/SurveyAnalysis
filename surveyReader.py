@@ -2,6 +2,7 @@ import csv
 import os 
 
 from roles import Roles
+from experience import Experience
 from participant import Participant
 from questions import *
 # from Q34Analyzer import Q34Analyzer
@@ -72,6 +73,9 @@ def createParticipant(row):
     roles = getRoles(row)
     participant.setRoles(roles)
 
+    exp = getExperience(row)
+    participant.setExperience(exp)
+
     q50_1 = getQ50_1(row)
     participant.setQ50_1(q50_1)
 
@@ -100,6 +104,9 @@ def getRoles(row):
     isDevOps = convertStrToBoolean(row[24])
 
     return Roles([isSoftEng, isSysEng, isSysAdmin, isProjMaint, isProjManag, isOtherRole, isSysArch, isDevOps])
+
+def getExperience(row):
+    return Experience(row[13])
 
 def getQ50_1(row):
     answerList = []

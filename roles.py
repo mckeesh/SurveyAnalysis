@@ -1,4 +1,5 @@
 class Roles:
+    type_ = "role"
     def __eq__(self, other):
       return other.isSoftEng == self.isSoftEng and \
              other.isSysEng == self.isSysEng and \
@@ -20,7 +21,17 @@ class Roles:
         self.isDevOps = roleList
         self.listed = roleList
 
-    def getActiveRoles(self):
+    def __str__(self):
+        rtnList = []
+        roleTitles = Roles.getRoleTitles()
+
+        for i in range(len(self.listed)):
+            if self.listed[i]:
+                rtnList += [roleTitles[i]]
+
+        return ",".join(rtnList)
+
+    def getActive(self):
         titles = self.getRoleTitles()
         return [titles[i] for i in range(len(titles)) if self.listed[i]]
 

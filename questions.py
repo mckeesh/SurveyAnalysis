@@ -3,6 +3,17 @@ class Q50_1:
     answers = [36, 37, 38, 39, 40]
     answersFullNames = ["Not at all", "A little", "A moderate amount", \
                                  "A lot", "A great deal"]
+
+    subquestions = ["Time to resolve a conflict",
+                    "Number of conflicting lines of code",
+                    "Complexity of conflicting lines of code",
+                    "Number of files in the conflict",
+                    "Complexity of the files with conflicts",
+                    '"Non-functional changes (whitespace, renaming, etc)"',
+                    "Dependencies of conflicting code on other components",
+                    "Atomicity of changesets in the conflict",
+                    "Your knowledge/expertise in area of conflicting code"]
+
     def __init__(self, answers):
         self.timeToResolve, \
         self.conflictingLOC, \
@@ -24,6 +35,14 @@ class Q50_2:
     answers = [1, 2, 3, 4, 5]
     answersFullNames = ["Not useful", "Slightly useful", "Moderately useful", \
                                  "Very useful", "Essential"]
+
+    subquestions = ["Better transparency in tool functionality/operations",
+                    "Better usability",
+                    "Better ways of filtering out less relevant information",
+                    "Better graphical presentation of information",
+                    "Better ways of exploring project history",
+                    "Better terminology that is more consistent with my other tools"]
+
     def __init__(self, answers):
         self.betterToolTransparency, \
         self.betterUsability, \
@@ -74,6 +93,13 @@ class Q19:
     answers = [22, 23, 24, 25, 26]
     answersFullNames = ["Not effective at all", "Slightly effective", "Moderately effective", \
                                  "Very effective", "Extremely effective"]
+    subquestions = ['"Simple, small merge conflict resolutions"',
+                    '"Simple, large merge conflict resolutions"',
+                    '"Complex, small merge conflict resolutions"',
+                    '"Complex, large merge conflict resolutions"',
+                    "Merge conflict resolutions that require exploring code history",
+                    "Merge conflict resolutions that require little or no code history exploration"]
+
     def __init__(self, answers):
         self.simpleSmall, \
         self.simpleLarge, \

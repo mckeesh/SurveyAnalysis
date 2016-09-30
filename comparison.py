@@ -1,11 +1,11 @@
-from subquestion import Subquestion
+from subquestion import SubquestionComparison
 
 class Comparison:
 
-    def __init__(self, role1, role2, questionName, data):
-        self.role1 = role1
-        self.role2 = role2
-        self.question = questionName
+    def __init__(self, trait1, trait2, question, data):
+        self.trait1 = trait1
+        self.trait2 = trait2
+        self.question = question
         self.data = data
 
     #list of dictionaries with the differences between each response
@@ -20,7 +20,7 @@ class Comparison:
         i = 0
         for dictionary in self.data:
             for key in dictionary.keys():
-                subquestions.append(Subquestion(self.role1, self.role2, self.question, i, key, dictionary[key]))
+                subquestions.append(SubquestionComparison(self.trait1, self.trait2, self.question, i, key, dictionary[key]))
             i += 1
         return subquestions
 
