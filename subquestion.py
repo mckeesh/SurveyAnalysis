@@ -15,6 +15,6 @@ class SubquestionComparison:
         outString += ("Question,%s\n" % self.question.name)
         outString += ("Subquestion,%s\n" % self.question.subquestions[self.subquestionNumber])
         outString += ("Answer,%s\n" % self.question.getAnswerTitle(self.answer))
-        outString += ("Percent Difference,%f\n" % self.value)
+        outString += ("Difference,%f\n" % self.value)
 
         return outString

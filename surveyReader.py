@@ -5,11 +5,9 @@ from roles import Roles
 from experience import Experience
 from participant import Participant
 from questions import *
+from project_source import ProjectSource
 # from Q34Analyzer import Q34Analyzer
-from Q19Analyzer import Q19Analyzer
-from Q36Analyzer import Q36Analyzer
-from Q50_1Analyzer import Q50_1Analyzer
-from Q50_2Analyzer import Q50_2Analyzer
+from QuestionAnalyzer import QuestionAnalyzer
 
 def main():
     dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -31,67 +29,50 @@ def main():
             else:
                 
                 participant = createParticipant(row)
-                participantList.append(participant)
+                if participant != None:
+                    participantList.append(participant)
 
             index += 1
 
-        analyzeQ19(participantList)
-        analyzeQ36(participantList)
-        analyzeQ50_1(participantList)
-        analyzeQ50_2(participantList)
-        # analyzeQ34(participantList)
-
-
-def analyzeQ19(participants):
-
-    analyzer = Q19Analyzer()
-    analyzer.analyze(participants)
-
-def analyzeQ36(participants):
-
-    analyzer = Q36Analyzer()
-    analyzer.analyze(participants)
-
-def analyzeQ50_1(participants):
-
-    analyzer = Q50_1Analyzer()
-    analyzer.analyze(participants)
-
-def analyzeQ50_2(participants):
-
-    analyzer = Q50_2Analyzer()
-    analyzer.analyze(participants)
-
-def analyzeQ34(participants):
-
-    analyzer = Q34Analyzer()
-    analyzer.analyze(participants)
+        analyzer = QuestionAnalyzer()
+        analyzer.analyze(participantList)
 
 def createParticipant(row):
     participant = Participant()
 
     roles = getRoles(row)
-    participant.setRoles(roles)
-
     exp = getExperience(row)
-    participant.setExperience(exp)
+    projectSource = getProjectSource(row)
 
-    q50_1 = getQ50_1(row)
-    participant.setQ50_1(q50_1)
+    if isValidParticipant(row):
+        participant.setRoles(roles)
+        participant.setExperience(exp)
+        participant.setProjectSource(projectSource)
 
-    q50_2 = getQ50_2(row)
-    participant.setQ50_2(q50_2)
+        q50_1 = getQ50_1(row)
+        participant.setQ50_1(q50_1)
 
-    q36 = getQ36(row)
-    participant.setQ36(q36)
+        q50_2 = getQ50_2(row)
+        participant.setQ50_2(q50_2)
 
-    q19 = getQ19(row)
-    participant.setQ19(q19)
+        q36 = getQ36(row)
+        participant.setQ36(q36)
 
-    q34 = getQ34(row)
-    participant.setQ34(q34)
+        q19 = getQ19(row)
+        participant.setQ19(q19)
 
-    return participant
+        q34 = getQ34(row)
+        participant.setQ34(q34)
+
+        return participant
+
+    else:
+        return None
+
+def isValidParticipant(row):
+    for i in range(13,24):
+        if row[i] != '':
+            return True
 
 def getRoles(row):
     isSoftEng = convertStrToBoolean(row[16])
@@ -107,6 +88,11 @@ def getRoles(row):
 
 def getExperience(row):
     return Experience(row[13])
+
+def getProjectSource(row):
+    if row[14] == '':
+        return ProjectSource(4)
+    return ProjectSource(row[14])
 
 def getQ50_1(row):
     answerList = []
@@ -150,7 +136,6 @@ def getQ34(row):
         answerList.append(castToInt(row[each]))
 
     return Q34(answerList)
-
 
 def castToInt(string):
     if string == '':

@@ -28,7 +28,10 @@ class Q50_1:
 
     @staticmethod
     def getAnswerTitle(answerNumber):
-        return Q50_1.answersFullNames[answerNumber-36]
+        if type(answerNumber) == int:
+            return Q50_1.answersFullNames[answerNumber-36]
+        else:
+            return "No Answer Title"
 
 class Q50_2:
     name = "Q50_2"
@@ -54,7 +57,10 @@ class Q50_2:
 
     @staticmethod
     def getAnswerTitle(answerNumber):
-        return Q50_2.answersFullNames[answerNumber-1]
+        if type(answerNumber) == int:
+            return Q50_2.answersFullNames[answerNumber-1]
+        else:
+            return "No Answer Title"
 
 class Q36:
     name = "Q36"
@@ -86,7 +92,10 @@ class Q36:
 
     @staticmethod
     def getAnswerTitle(answerNumber):
-        return Q36.answersFullNames[answerNumber-13]
+        if type(answerNumber) == int:
+            return Q36.answersFullNames[answerNumber-13]
+        else:
+            return "No Answer Title"
 
 class Q19:
     name = "Q19"
@@ -111,7 +120,10 @@ class Q19:
 
     @staticmethod
     def getAnswerTitle(answerNumber):
-        return Q19.answersFullNames[answerNumber-22]
+        if type(answerNumber) == int:
+            return Q19.answersFullNames[answerNumber-22]
+        else:
+            return "No Answer Title"
 
 class Q26:
     def __init__(self, answer):

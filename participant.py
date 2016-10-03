@@ -2,6 +2,7 @@ class Participant:
     def __init__(self):
         self.roles = None
         self.experience = None
+        self.projectSource = None
         self.Q19 = None
         self.Q50_1 = None
         self.Q50_2 = None
@@ -18,6 +19,9 @@ class Participant:
 
     def setExperience(self, expObject):
         self.experience = expObject
+
+    def setProjectSource(self, projectSourceObj):
+        self.projectSource = projectSourceObj
 
     def setQ19(self, q19Response):
         self.Q19 = q19Response

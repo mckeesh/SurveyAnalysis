@@ -1,6 +1,7 @@
 from OutputWriter import OutputWriter
 from roles import Roles
 from comparison import Comparison
+from GeneralAnalyzer import GeneralAnalyzer
 
 class RoleAnalyzer:
     def __init__(self):
@@ -21,7 +22,7 @@ class RoleAnalyzer:
                     percentages = RoleAnalyzer.getResponsePercentages(participants, question, roles1)
                     OutputWriter.outputPercentages(percentages, question, "percentage_results_%s.csv" % Roles.getRoleTitles()[i])
 
-                    means = ExperienceAnalyzer.getResponseMeans(participants, question)
+                    means = ExperienceAnalyzer.getResponseMeans(participants, question, roles1)
                     OutputWriter.outputMeans(means, question, "mean_results_%s.csv" % experience.readable())
 
         else:
@@ -33,11 +34,11 @@ class RoleAnalyzer:
                 percentages = RoleAnalyzer.getResponsePercentages(participants, question, roles1)
                 OutputWriter.outputPercentages(percentages, question, "percentage_results_%s.csv" % Roles.getRoleTitles()[i])
 
-                means = RoleAnalyzer.getResponseMeans(participants, question)
+                means = RoleAnalyzer.getResponseMeans(participants, question, roles1)
                 OutputWriter.outputMeans(means, question, "mean_results_%s.csv" % Roles.getRoleTitles()[i])
 
     @staticmethod
-    def analyzeRoleDifferences(participants, question, ignoreOtherRole=True):
+    def analyzeRoleDifferencesPercentage(participants, question, ignoreOtherRole=True):
         #Eew, clean it up
         comparisons = []
         if ignoreOtherRole:
@@ -56,7 +57,7 @@ class RoleAnalyzer:
 
                         roles2 = Roles(jRoles)
 
-                        comparison = RoleAnalyzer.compareRoles(roles1, roles2, participants, question)
+                        comparison = RoleAnalyzer.compareRolesPercentages(roles1, roles2, participants, question)
                         # print("##########\n%s,%s\n########\n" % (str(roles1), str(roles2)))
                         comparisons.append(comparison)
         else:
@@ -71,7 +72,47 @@ class RoleAnalyzer:
 
                     roles2 = Roles(jRoles)
 
-                    comparison = self.compareRoles(roles1, roles2, participants)
+                    comparison = self.compareRolesPercentages(roles1, roles2, participants)
+                    comparisons.append(comparison)
+
+        return comparisons
+
+    @staticmethod
+    def analyzeRoleDifferencesMeans(participants, question, ignoreOtherRole=True):
+        #Eew, clean it up
+        comparisons = []
+        if ignoreOtherRole:
+            for i in range(8):
+                iRoles = [False]*8
+                iRoles[i] = True
+                roles1 = Roles(iRoles)
+
+                for j in range(8):
+                    jRoles = [False]*8
+                    jRoles[j] = True
+
+                    if i == 5 or j == 5:
+                        pass
+                    else:
+
+                        roles2 = Roles(jRoles)
+
+                        comparison = RoleAnalyzer.compareRolesMeans(roles1, roles2, participants, question)
+                        # print("##########\n%s,%s\n########\n" % (str(roles1), str(roles2)))
+                        comparisons.append(comparison)
+        else:
+            for i in range(8):
+                iRoles = [False]*8
+                iRoles[i] = True
+                roles1 = Roles(iRoles)
+
+                for j in range(8):
+                    jRoles = [False]*8
+                    jRoles[j] = True
+
+                    roles2 = Roles(jRoles)
+
+                    comparison = self.compareRolesMeans(roles1, roles2, participants)
                     comparisons.append(comparison)
 
         return comparisons
@@ -93,7 +134,7 @@ class RoleAnalyzer:
 
         scoreSums = []
         for x in range(len(getattr(participants[0], question.name).listed)):
-            scoreSums.append(RoleAnalyzer._blankAnswerDict(getattr(participants[0], question.name)))
+            scoreSums.append(GeneralAnalyzer._blankAnswerDict(getattr(participants[0], question.name)))
         
         for participant in participants:
             questionList = getattr(participant, question.name).listed
@@ -145,60 +186,19 @@ class RoleAnalyzer:
         return subquestions
 
     @staticmethod      
-    def compareRoles(roles1, roles2, participants, question):
-        roles1Result = RoleAnalyzer.getResponsePercentages(participants, question, roles1)
-        roles2Result = RoleAnalyzer.getResponsePercentages(participants, question, roles2)
+    def compareRolesPercentages(roles1, roles2, participants, question):
+        r1Result = RoleAnalyzer.getResponsePercentages(participants, question, roles1)
+        r2Result = RoleAnalyzer.getResponsePercentages(participants, question, roles2)
 
-        comparison = RoleAnalyzer.compareResults(roles1Result, roles2Result)
+        comparison = GeneralAnalyzer.compareDictResults(r1Result, r2Result)
 
         return Comparison(roles1, roles2, question, comparison)
 
-    @staticmethod
-    def compareResults(result1, result2):
-        if len(result1) != len(result2):
-            raise Exception("Results don't seem to be of the same form.")
-        
-        comparisons = []
-        for i in range(len(result1)):
-            dictComparison = RoleAnalyzer._compareDictResult(result1[i], result2[i])
-            comparisons.append(dictComparison)
+    @staticmethod      
+    def compareRolesMeans(roles1, roles2, participants, question):
+        r1Result = RoleAnalyzer.getResponseMeans(participants, question, roles1)
+        r2Result = RoleAnalyzer.getResponseMeans(participants, question, roles2)
 
-        return comparisons
+        comparison = GeneralAnalyzer.compareListResults(r1Result, r2Result)
 
-    @staticmethod    
-    def _compareDictResult(dict1, dict2):
-        
-        dict1Keys = list(dict1.keys())
-        dict2Keys = list(dict2.keys())
-
-        dict1Keys.sort()
-        dict2Keys.sort()
-
-        if dict1Keys != dict2Keys:
-            raise Exception("The two dictionaries you are comparing have different keys.")
-
-        comparison = RoleAnalyzer._calculateDictDiff(dict1, dict2)
-
-        return comparison
-
-    @staticmethod
-    def _calculateDictDiff(dict1, dict2):
-        diffDict = {}
-
-        dict1Keys = dict1.keys()
-
-        for key in dict1.keys():
-            # print("%s,%s" % (dict1[key], dict2[key]))
-            difference = abs(dict1[key]-dict2[key])
-            diffDict[key] = difference
-
-
-        return diffDict
-
-    @staticmethod
-    def _blankAnswerDict(question):
-        answerDict = {}
-        for answer in question.answers:
-            answerDict[answer] = 0
-
-        return answerDict
+        return Comparison(roles1, roles2, question, comparison)

@@ -15,13 +15,19 @@ class Comparison:
     def splitSubquestions(self):
         if self.data is None:
             raise Exception("Data must be set to split into subquestions.")
-        
         subquestions = []
-        i = 0
-        for dictionary in self.data:
-            for key in dictionary.keys():
-                subquestions.append(SubquestionComparison(self.trait1, self.trait2, self.question, i, key, dictionary[key]))
-            i += 1
+
+        if type(self.data[0]) == dict:
+            i = 0
+            for dictionary in self.data:
+                for key in dictionary.keys():
+                    subquestions.append(SubquestionComparison(self.trait1, self.trait2, self.question, i, key, dictionary[key]))
+                i += 1
+        if type(self.data[0]) == float:
+            i = 0
+            for mean in self.data:
+                subquestions.append(SubquestionComparison(self.trait1, self.trait2, self.question, i, None, self.data[i]))
+                i += 1
         return subquestions
 
     def toString(self, comparison, csv=False):
